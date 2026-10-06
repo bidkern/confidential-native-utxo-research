@@ -1,4 +1,4 @@
-# Smaller-proof feasibility — October 6, 2026
+# Smaller-proof feasibility â€” October 6, 2026
 
 Decision: retain the measured consensus verifier; investigate aggregated Bulletproofs-family proofs in a separate experimental adapter. Do not raise the block work limit or substitute cryptography based on these estimates. No replacement has been benchmarked or integrated into consensus.
 

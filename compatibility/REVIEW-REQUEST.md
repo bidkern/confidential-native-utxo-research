@@ -1,4 +1,4 @@
-# Architectural review request â€” draft, not sent
+# Architectural review request — draft, not sent
 
 Subject: Request for feasibility review: confidential Bitcoin claims with native spentness and fragmented public backing
 

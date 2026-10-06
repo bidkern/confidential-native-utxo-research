@@ -1,4 +1,4 @@
-# Activation design gate â€” October 5, 2026
+# Activation design gate — October 5, 2026
 
 The fixed-height portion is now implemented and tested on isolated regtest. This is not a production deployment or a request to activate on Bitcoin. The executable refuses non-regtest networks. -cnuactivationheight selects H, defaulting to zero for the original V2 tests; do not change it on existing chainstate.
 
