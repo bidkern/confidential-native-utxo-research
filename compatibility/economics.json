@@ -1,12 +1,12 @@
 {
-  "status": "Wire arithmetic scenario, NOT an implemented or benchmarked replacement",
+  "status": "Measured isolated secp proof sizes; hypothetical transaction integration, not node throughput",
   "unchanged_one_input_two_output_work_units": 7,
   "unchanged_max_payments_per_block": 36,
   "assumptions": [
-    "64-bit classic Bulletproof shape; compressed 33-byte secp256k1 points and 32-byte scalars",
+    "Actual historical secp Bulletproof proof bytes; previous illustrative formula retained for comparison",
     "Aggregate values and MAX_MONEY complements, padded to a power of two",
-    "Keep existing non-range-proof overhead; no cryptographic or wire-format compatibility established",
-    "No CPU speedup assumed; existing work limits remain unchanged"
+    "Keep existing non-range-proof overhead; candidate commitment encoding matches but transaction format/framing and activation remain undefined",
+    "Isolated adapter verification includes complement tally, not full-node validation; existing work limits remain unchanged"
   ],
   "scenarios": [
     {
@@ -20,11 +20,13 @@
       },
       "hypothetical_aggregate_values": 4,
       "hypothetical_secp_bulletproof_bytes": 820,
-      "hypothetical_vbytes": 743,
+      "measured_candidate_proof_bytes": 803,
+      "measured_candidate_verify_median_ms": 14.6333,
+      "hypothetical_vbytes": 739,
       "hypothetical_fees_sats": {
-        "1": 743,
-        "5": 3715,
-        "10": 7430
+        "1": 739,
+        "5": 3695,
+        "10": 7390
       }
     },
     {
@@ -38,11 +40,13 @@
       },
       "hypothetical_aggregate_values": 16,
       "hypothetical_secp_bulletproof_bytes": 952,
-      "hypothetical_vbytes": 1464,
+      "measured_candidate_proof_bytes": 932,
+      "measured_candidate_verify_median_ms": 46.2474,
+      "hypothetical_vbytes": 1459,
       "hypothetical_fees_sats": {
-        "1": 1464,
-        "5": 7320,
-        "10": 14640
+        "1": 1459,
+        "5": 7295,
+        "10": 14590
       }
     },
     {
@@ -56,11 +60,13 @@
       },
       "hypothetical_aggregate_values": 64,
       "hypothetical_secp_bulletproof_bytes": 1084,
-      "hypothetical_vbytes": 3329,
+      "measured_candidate_proof_bytes": 1060,
+      "measured_candidate_verify_median_ms": 156.9721,
+      "hypothetical_vbytes": 3323,
       "hypothetical_fees_sats": {
-        "1": 3329,
-        "5": 16645,
-        "10": 33290
+        "1": 3323,
+        "5": 16615,
+        "10": 33230
       }
     }
   ]

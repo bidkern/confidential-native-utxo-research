@@ -1,0 +1,14 @@
+[package]
+name = "cnu-secp-bulletproofs-experiment"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "MIT"
+[workspace]
+[dependencies]
+commitments = { path = "../../crates/commitments" }
+keys = { path = "../../crates/keys" }
+rand = "=0.8.5"
+serde_json = "=1.0.151"
+[build-dependencies]
+cc = "1"

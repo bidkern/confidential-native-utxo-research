@@ -3,6 +3,7 @@ name = "address"
 version = "0.1.0"
 edition = "2021"
 publish = false
+license = "MIT"
 
 [dependencies]
 keys.workspace = true

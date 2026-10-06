@@ -8,3 +8,4 @@ compatibility/runs/
 *.seed.json
 **/test-seeds.json
 compatibility/latest*.json
+experiments/secp256k1-bulletproofs/upstream/

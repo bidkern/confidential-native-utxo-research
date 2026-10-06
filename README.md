@@ -28,6 +28,10 @@ We seek separate consensus and applied-cryptography proceed/revise/stop assessme
 
 Legacy direct-value research documents under docs describe an earlier hard-fork experiment; compatibility/SPEC.md defines the published compatibility prototype. They must not be confused with a production upgrade proposal.
 
-Third-party notices are in THIRD_PARTY.md. No new project-wide license grant is made by this publication; licensing of original contributions requires the owner's explicit choice.
+Third-party notices are in THIRD_PARTY.md. Original project code is now MIT licensed; see LICENSE. Upstream licenses and notices remain applicable.
 
 [Prioritized remaining work](NEXT-STEPS.md). An [isolated Ristretto comparator](experiments/bulletproofs/README.md) now supplies measured aggregated-proof examples; it is not a secp256k1 verifier replacement.
+
+## secp256k1 proof experiment
+
+The MIT-licensed isolated [adapter](experiments/secp256k1-bulletproofs/README.md) now tests aggregated proofs against the baseline's exact generator and commitment encoding, including exact MAX_MONEY bounds. Its historical dependency needed a documented scratch cleanup patch after malformed proofs crashed the initial experiment. This is not integrated into consensus; the existing proof format and work cap remain in place. Independent review and outside full-node reproduction remain pending.

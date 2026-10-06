@@ -1,0 +1,68 @@
+{
+  "baseline_commitments_byte_equal": true,
+  "exact_bound_and_adversarial_checks": "passed",
+  "experimental_only": true,
+  "local_patch": "two scratch-frame cleanup insertions; VERIFY enabled",
+  "measurements": [
+    {
+      "outputs": 1,
+      "padded_commitments": 2,
+      "proof_bytes": 739,
+      "prove_ms": 75.0249,
+      "verify_median_ms": 8.7511,
+      "verify_samples_ms": [
+        8.7278,
+        8.7456,
+        8.7511,
+        8.756699999999999,
+        8.768400000000002
+      ]
+    },
+    {
+      "outputs": 2,
+      "padded_commitments": 4,
+      "proof_bytes": 803,
+      "prove_ms": 145.1307,
+      "verify_median_ms": 14.6333,
+      "verify_samples_ms": [
+        14.6181,
+        14.6271,
+        14.6333,
+        14.638399999999999,
+        14.722000000000001
+      ]
+    },
+    {
+      "outputs": 8,
+      "padded_commitments": 16,
+      "proof_bytes": 932,
+      "prove_ms": 543.6517,
+      "verify_median_ms": 46.2474,
+      "verify_samples_ms": [
+        46.187400000000004,
+        46.2271,
+        46.2474,
+        46.4008,
+        46.453
+      ]
+    },
+    {
+      "outputs": 24,
+      "padded_commitments": 64,
+      "proof_bytes": 1060,
+      "prove_ms": 2070.8127,
+      "verify_median_ms": 156.9721,
+      "verify_samples_ms": [
+        156.89149999999998,
+        156.9576,
+        156.9721,
+        157.13920000000002,
+        157.244
+      ]
+    }
+  ],
+  "scratch_bytes": 67108864,
+  "setup_ms": 675.7394,
+  "upstream_commit": "b247e1ec8ed62b9abf123dc83189d253e17d488d",
+  "verification": "includes modern complement tally; excludes generator setup; no proof result cache; not full transaction or node timings"
+}
