@@ -1,0 +1,11 @@
+[package]
+name = "address"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+keys.workspace = true
+secp256k1-zkp.workspace = true
+bech32.workspace = true
+

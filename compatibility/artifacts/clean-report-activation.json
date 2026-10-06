@@ -1,0 +1,46 @@
+{
+  "scope": "fixed-height activation, historical namespace and rollback regression",
+  "success": true,
+  "checks": [
+    {
+      "case": "historical_claim_cannot_redeem_new_backing",
+      "stock_result": null,
+      "upgraded_results": [
+        "bad-cnu-reserve",
+        "bad-cnu-reserve"
+      ],
+      "block": "5d5dfd40637f5ffe8c33864f1e5c74ed1d9eed13951e7fdf4108dc6c354bc736"
+    }
+  ],
+  "transactions": [
+    {
+      "case": "activation_deposit",
+      "txid": "ffc3a655753dcdc6bdf7dbdca9da2c0b88ffe9eeb4b490be54b3519e589697ee",
+      "reserve_inputs": 0,
+      "reserve_outputs": 1,
+      "bytes": 9204,
+      "vbytes": 2436
+    },
+    {
+      "case": "same_block_spend",
+      "txid": "33a19d1b66e47d6acbe065fec898267d30dd11ade4da170b8e1863fdffe38d7e",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9243,
+      "vbytes": 2445
+    }
+  ],
+  "run": "<local path omitted>",
+  "version": 2,
+  "binaries": {
+    "stock": "dca0ff83c06fb8dd0e0ebf7333d75cdb1836143e6647cf156afd220fdb1df9e8",
+    "upgraded": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e",
+    "peer": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e"
+  },
+  "boundary_mempool_eviction": true,
+  "activation_same_block_spend": true,
+  "historical_reserve_and_carrier_public_spends": true,
+  "rollback_below_activation_and_reconnect": true,
+  "historical_seed_recovery_and_reindex": true,
+  "activation_height": 105
+}

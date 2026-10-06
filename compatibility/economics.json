@@ -1,0 +1,67 @@
+{
+  "status": "Wire arithmetic scenario, NOT an implemented or benchmarked replacement",
+  "unchanged_one_input_two_output_work_units": 7,
+  "unchanged_max_payments_per_block": 36,
+  "assumptions": [
+    "64-bit classic Bulletproof shape; compressed 33-byte secp256k1 points and 32-byte scalars",
+    "Aggregate values and MAX_MONEY complements, padded to a power of two",
+    "Keep existing non-range-proof overhead; no cryptographic or wire-format compatibility established",
+    "No CPU speedup assumed; existing work limits remain unchanged"
+  ],
+  "scenarios": [
+    {
+      "outputs": 2,
+      "measured_vbytes": 4704,
+      "measured_cold_rpc_ms": 22.15,
+      "fees_sats": {
+        "1": 4704,
+        "5": 23520,
+        "10": 47040
+      },
+      "hypothetical_aggregate_values": 4,
+      "hypothetical_secp_bulletproof_bytes": 820,
+      "hypothetical_vbytes": 743,
+      "hypothetical_fees_sats": {
+        "1": 743,
+        "5": 3715,
+        "10": 7430
+      }
+    },
+    {
+      "outputs": 8,
+      "measured_vbytes": 17890,
+      "measured_cold_rpc_ms": 76.65,
+      "fees_sats": {
+        "1": 17890,
+        "5": 89450,
+        "10": 178900
+      },
+      "hypothetical_aggregate_values": 16,
+      "hypothetical_secp_bulletproof_bytes": 952,
+      "hypothetical_vbytes": 1464,
+      "hypothetical_fees_sats": {
+        "1": 1464,
+        "5": 7320,
+        "10": 14640
+      }
+    },
+    {
+      "outputs": 24,
+      "measured_vbytes": 53050,
+      "measured_cold_rpc_ms": 242.86,
+      "fees_sats": {
+        "1": 53050,
+        "5": 265250,
+        "10": 530500
+      },
+      "hypothetical_aggregate_values": 64,
+      "hypothetical_secp_bulletproof_bytes": 1084,
+      "hypothetical_vbytes": 3329,
+      "hypothetical_fees_sats": {
+        "1": 3329,
+        "5": 16645,
+        "10": 33290
+      }
+    }
+  ]
+}

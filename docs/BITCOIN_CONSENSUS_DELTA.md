@@ -1,0 +1,37 @@
+# Post-prototype Bitcoin consensus mapping
+
+EXPERIMENTAL; produced after the standalone flow passed its initial tests and measurements. This is the initial candidate hard-fork mapping, not a BIP or activation proposal. A subsequent partial Core patch and two-node lab are documented in [CORE_INTEGRATION.md](CORE_INTEGRATION.md). There is no claim that the chosen encoding/proof system is globally minimal.
+
+Classification: A wallet-only; B transaction format; C mempool policy; D consensus; E persistent node state. Costs below refer to this simulator unless explicitly stated. Core's compressed chainstate and weight accounting require separate measurements.
+
+| Field/rule | Current Bitcoin | Proposed and why wallet logic is insufficient | Exact proposed validation | Class | Node cost | Old-node behavior / soft fork |
+|---|---|---|---|---|---|---|
+| Confidential amount | Plaintext nValue | Tagged commitment replaces value; wallets cannot conceal nValue from validators | Canonical 33-byte C, validated [0,M] range, one fixed H | B D E | +25 amount bytes before other fields; range verification | Old parsers/accounting do not implement this variant; no for direct replacement |
+| Ownership | ScriptPubKey; P2TR supports key/script paths | Confidential key-only variant in model; preserve existing transparent script paths in Core | BIP340 signature by prior P over extended message | B D A | 32-byte ownership key and 64-byte signature; one signature verification/input | Current P2TR can inspire semantics, not encode hidden values by itself |
+| Input reference | txid:vout | Unchanged concept | Existence, maturity, uniqueness and atomic consumption | D E | Lookup/undo complexity retained | Compatible concept, not sufficient to make whole extension soft |
+| Range proof witness | Absent | Two proofs plus complement; validators need monetary bounds | Each fixed [0,2^52-1]; C+K=M*H; no proof on transparent output | B D | 8,373 bytes/output for complement, lengths and proofs; about 8.5 ms baseline verification | New rule required; encoding not legacy compatible |
+| Excess witness | Absent | Establish zero-value residual blind without revealing openings | Exact-zero proof on E and commitment tally; optional E only if direct tally succeeds | B D | 33-byte E + 4-byte length + 65-byte proof plus tag | Does not alter legacy amount arithmetic; no witness-only solution |
+| Public fee | Calculated from public inputs minus outputs | Explicit u64 with committed conservation | [0,M], tally subtracts fee*H, checked block sum | B D C A | 8 bytes; one unblinded commitment if fee nonzero | Old-node fee calculation differs; no for direct replacement |
+| Receiver ciphertext | Not required by P2TR | Value+blind encrypted to receiver; local scan needs authenticated recovery data | Fixed 56-byte field bound into base body/signatures; no decryption in consensus | A B D | 56 chain bytes/output, scan AEAD only after key match | No stable address identifier; feature recognizability remains |
+| Sighash | Existing Taproot message includes plaintext amount information | Commit all inputs and referenced confidential output records | Domain-separated full base body, prior outputs, input index; SIGHASH_ALL-like only | A D | Hashing records for each input; current implementation repeats work | New monetary representation requires a new digest definition |
+| txid/wtxid | Separate base/witness commitments | Same separation principle, experimental serialization/tags | Base binds destinations, C and ciphertext; block ID binds all witnesses | B D | Full witness bandwidth, no discount in simulator | Not literal Bitcoin transaction/block serialization |
+| Coinbase/subsidy | Transparent reward bounded by subsidy+fees | Retain transparent issuance | Prohibit confidential coinbase; maturity=100; unchanged halving schedule; reward<=subsidy+validated fees | D | Cheap public arithmetic | Principle retained; fees need upgraded accounting |
+| Coin record | Amount+script, height/coinbase metadata | Tagged amount plus ownership, currently ciphertext retained | Persist only validated coins; no proofs in UTXO record | E | 127 bytes vs 46 in simulator's transparent record, excluding outpoint; +81 | Snapshot/chainstate format migration required; not a Core disk-size estimate |
+| Undo/reorg | Block undo restores spent coins | Same lifecycle, extended record | Remove created coins and restore original spends; don't restore intermediate in-block outputs | E D | Larger undo records; simulator stages full map copy | Database versioning and upgrade paths unresolved |
+| Receiver addresses / accounts | Wallet protocol, not consensus | Independent hardened scan/spend accounts and ECDH scanning | No consensus requirement to use this receiver protocol | A | Scan per account per transaction; account recovery bounds | Wallet-only component can change independently, but cannot hide current nValue |
+| Limits / relay | Weight, standardness, fee policy and validation caches | Byte/work budgets and confidential relay rules needed | Simulator limits 4 MB/block, 4,096 inputs/outputs, fixed proof forms | C D | Proof verification dominates; no batch accelerator in selected bindings | Production weight pricing/DoS budget unresolved |
+| Mempool/RBF | Conflict tracking, package policies, fee rates | Same outpoint conflicts, explicit fee rates, confidential validation before acceptance | Reuse stateless checks against chain+mempool view; replacement semantics require separate tests | C D | Extra proof cache/work and payload size | Full mempool implementation is not part of this simulator |
+
+## Why the straightforward design is a hard fork
+
+In legacy accounting, a zero-valued carrier spent to a positive transparent withdrawal is invalid. Restricting a witness cannot make that invalid spend valid. Replacing the serialized amount itself also changes parsing. Public carrier/reserve approaches must retain legacy public accounting, and require a distinct architecture and supply argument. No activation threshold or signaling mechanism changes these facts.
+
+The smallest credible *conceptual* change is a new monetary output type, its proofs and conservation rule, and a compatible signing/coin representation. It does not require anonymous membership, a nullifier database or a parallel monetary ledger. Small conceptual scope does not imply a small Core patch or an easy fork.
+
+## Core integration boundary
+
+Likely areas to examine later: transaction serialization, `CheckTransaction`, `CheckTxInputs`, coin records/undo, sighash/script verification, `ConnectBlock` fee accounting, witness commitments, policy/weight, PSBT and wallet scanning. Preserve existing script types and consensus rules for transparent inputs; the simulator's key-only transparent stand-in is not a replacement plan for them.
+
+Before a Core prototype: pin a revision; settle the wire specification and hash domains; audit the proof composition; choose calibrated resource pricing; design a persistent coin migration; add cross-platform/cross-implementation vectors; test full mempool and script interactions. Current bandwidth/verification costs make this a research baseline, not a viability finding.
+
+Sources: [Core output serialization](https://github.com/bitcoin/bitcoin/blob/master/src/primitives/transaction.h), [Core input checks](https://github.com/bitcoin/bitcoin/blob/master/src/consensus/tx_verify.cpp), [BIP341](https://bips.dev/341/). Read 2026-09-28; moving source links are not version pins.

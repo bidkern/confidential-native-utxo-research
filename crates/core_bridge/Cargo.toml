@@ -1,0 +1,23 @@
+[package]
+name = "core_bridge"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+keys.workspace = true
+address.workspace = true
+confidential_tx.workspace = true
+receiver_scan.workspace = true
+secp256k1-zkp.workspace = true
+rand.workspace = true
+hex.workspace = true
+serde_json.workspace = true
+bech32.workspace = true
+
+[[bin]]
+name = "cnu-wallet"
+path = "src/bin/wallet.rs"

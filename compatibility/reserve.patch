@@ -1,0 +1,407 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ac2d7d615..7b0ce1555 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -183,6 +183,7 @@ endif()
+ 
+ # P2P and RPC server functionality used by `bitcoind` and `bitcoin-qt` executables.
+ add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
++  cnu_reserve/reserve.cpp
+   addrdb.cpp
+   addrman.cpp
+   banman.cpp
+@@ -444,3 +445,5 @@ endif()
+ if(BUILD_FUZZ_BINARY)
+   add_subdirectory(test/fuzz)
+ endif()
++
++target_link_libraries(bitcoin_node PRIVATE "${CNU_RUST_LIBRARY}" $<$<PLATFORM_ID:Windows>:ntdll;userenv;bcrypt;ws2_32>)
+diff --git a/src/cnu_reserve/reserve.cpp b/src/cnu_reserve/reserve.cpp
+new file mode 100644
+index 000000000..d8b6d4b36
+--- /dev/null
++++ b/src/cnu_reserve/reserve.cpp
+@@ -0,0 +1,128 @@
++// V2 research restrictions over unchanged public Bitcoin amount accounting.
++#include <cnu_reserve/reserve.h>
++#include <coins.h>
++#include <crypto/sha256.h>
++#include <hash.h>
++#include <primitives/transaction.h>
++#include <pubkey.h>
++#include <algorithm>
++#include <cstdint>
++#include <vector>
++extern "C" int cnu_verify_v0(const unsigned char*,size_t,const unsigned char*,size_t,const unsigned char*,size_t,uint32_t);
++namespace {
++using Bytes=std::vector<unsigned char>;
++int activation_height=0; // Set once at startup; regtest-only consensus parameter.
++constexpr size_t MAX_PAYLOAD=250000,MAX_META=500000,MAX_IO=256;
++constexpr CAmount MAX_FRAGMENT=10*COIN; // Research bound, not a production parameter.
++const Bytes MAGIC{0x50,'C','N','U','2'};
++void U32(Bytes& b,uint32_t n){for(int i=0;i<4;++i)b.push_back(n>>(8*i));}
++void U64(Bytes& b,uint64_t n){for(int i=0;i<8;++i)b.push_back(n>>(8*i));}
++bool Carrier(const CScript& s){return s.size()==34 && s[0]==OP_16 && s[1]==32;}
++bool Reserve(const CScript& s){static const Bytes tag(32,0x44);return s.size()==34 && s[0]==OP_15 && s[1]==32 && std::equal(tag.begin(),tag.end(),s.begin()+2);}
++bool P2TR(const CScript& s){return s.size()==34 && s[0]==OP_1 && s[1]==32;}
++bool Matches(const Bytes& meta,const CTxOut& out){
++    const auto& s=out.scriptPubKey;
++    if(meta.size()==41 && meta[0]==0){
++        uint64_t value=0;for(int i=0;i<8;++i)value|=uint64_t(meta[1+i])<<(8*i);
++        return value<=MAX_MONEY && out.nValue==value && P2TR(s) && std::equal(meta.begin()+9,meta.end(),s.begin()+2);
++    }
++    if(meta.size()==122 && meta[0]==1 && out.nValue==0 && Carrier(s)){
++        unsigned char h[32];CSHA256().Write(meta.data(),meta.size()).Finalize(h);
++        return std::equal(h,h+32,s.begin()+2);
++    }
++    return false;
++}
++bool Read32(const Bytes& b,size_t& at,uint32_t& n){
++    if(at>b.size() || b.size()-at<4)return false;
++    n=0;for(int i=0;i<4;++i)n|=uint32_t(b[at++])<<(8*i);return true;
++}
++bool Envelope(const Bytes& b,Bytes& payload,std::vector<Bytes>& outputs){
++    if(b.size()<MAGIC.size() || b.size()>MAX_PAYLOAD+MAX_META+13 || !std::equal(MAGIC.begin(),MAGIC.end(),b.begin()))return false;
++    size_t at=MAGIC.size();uint32_t size,count;
++    if(!Read32(b,at,size) || size>MAX_PAYLOAD || size>b.size()-at)return false;
++    payload.assign(b.begin()+at,b.begin()+at+size);at+=size;
++    if(!Read32(b,at,count) || count>MAX_IO || b.size()-at>MAX_META)return false;
++    for(uint32_t i=0;i<count;++i){
++        if(at>=b.size())return false;
++        size_t len=b[at]==0?41:b[at]==1?122:0;
++        if(!len || len>b.size()-at)return false;
++        outputs.emplace_back(b.begin()+at,b.begin()+at+len);at+=len;
++    }
++    return at==b.size();
++}
++}
++void cnu_reserve::SetActivationHeight(int height){activation_height=height;}
++int cnu_reserve::ActivationHeight(){return activation_height;}
++bool cnu_reserve::Active(int height){return height>=activation_height;}
++unsigned cnu_reserve::Work(const CTransaction& tx,const CCoinsViewCache& coins,int height){
++    if(!Touches(tx,coins,height))return 0;
++    unsigned work=1; // Exact-zero excess proof.
++    for(const auto& out:tx.vout)if(Carrier(out.scriptPubKey))work+=2;
++    for(const auto& in:tx.vin){const auto& coin=coins.AccessCoin(in.prevout);if(coin.nHeight>=activation_height && Reserve(coin.out.scriptPubKey))continue;work+=(coin.nHeight>=activation_height && Carrier(coin.out.scriptPubKey))?2:1;}
++    return work;
++}
++bool cnu_reserve::Touches(const CTransaction& tx,const CCoinsViewCache& coins,int height){
++    if(!Active(height))return false;
++    for(const auto& in:tx.vin){const auto& coin=coins.AccessCoin(in.prevout);const auto& s=coin.out.scriptPubKey;if(coin.nHeight>=activation_height && (Reserve(s)||Carrier(s)))return true;}
++    for(const auto& o:tx.vout)if(Reserve(o.scriptPubKey)||Carrier(o.scriptPubKey))return true;
++    return false;
++}
++bool cnu_reserve::Coinbase(const CTransaction& tx,int height){
++    if(!Active(height))return true;
++    // No special bootstrap: deposits create backed fragments after normal maturity.
++    for(const auto& o:tx.vout)if(Reserve(o.scriptPubKey)||Carrier(o.scriptPubKey))return false;
++    return true;
++}
++bool cnu_reserve::Check(const CTransaction& tx,const CCoinsViewCache& coins,int height,long long fee){
++    if(!Touches(tx,coins,height))return true;
++    if(Work(tx,coins,height)>MAX_TX_WORK)return false;
++    if(tx.version!=2 || tx.nLockTime!=0 || tx.vin.empty() || tx.vin.size()>MAX_IO || tx.vout.empty() || tx.vout.size()>MAX_IO || fee<0 || fee>MAX_MONEY)return false;
++    size_t ri=0,ro=0;CAmount reserve_in=0,reserve_out=0,smallest=MAX_MONEY;
++    while(ri<tx.vin.size() && coins.AccessCoin(tx.vin[ri].prevout).nHeight>=activation_height && Reserve(coins.AccessCoin(tx.vin[ri].prevout).out.scriptPubKey)){
++        const auto value=coins.AccessCoin(tx.vin[ri].prevout).out.nValue;
++        if(value<=0 || value>MAX_FRAGMENT)return false;
++        reserve_in+=value;smallest=std::min(smallest,value);++ri;
++    }
++    while(ro<tx.vout.size() && Reserve(tx.vout[ro].scriptPubKey)){
++        const auto value=tx.vout[ro].nValue;if(value<=0 || value>MAX_FRAGMENT)return false;
++        reserve_out+=value;++ro;
++    }
++    // Prevent spending unrelated backing just to churn or consolidate the pool.
++    if(ri && (reserve_in<=reserve_out || reserve_in-smallest>=reserve_in-reserve_out))return false;
++    if(ri==tx.vin.size() || ro==tx.vout.size())return false;
++    for(const auto& in:tx.vin)if(!in.scriptSig.empty() || in.nSequence!=CTxIn::SEQUENCE_FINAL)return false;
++    for(size_t i=0;i<ri;++i)if(!tx.vin[i].scriptWitness.IsNull())return false;
++    const auto& first=tx.vin[ri];const auto& first_out=coins.AccessCoin(first.prevout).out;
++    const auto& stack=first.scriptWitness.stack;
++    if((Carrier(first_out.scriptPubKey) && stack.size()!=3) || (P2TR(first_out.scriptPubKey) && stack.size()!=2) || stack.empty())return false;
++    Bytes payload;std::vector<Bytes> outputs;
++    if(!Envelope(stack.back(),payload,outputs) || outputs.size()+ro!=tx.vout.size())return false;
++    Bytes base{'C','N','U','0'};U32(base,0x43505554);U32(base,tx.vin.size()-ri);
++    Bytes prev;U32(prev,tx.vin.size()-ri);
++    const uint256 outer=(TaggedHash("CNU/outer/v2") << TX_NO_WITNESS(tx)).GetSHA256();
++    for(size_t i=ri;i<tx.vin.size();++i){
++        const auto& in=tx.vin[i];const auto& out=coins.AccessCoin(in.prevout).out;
++        for(const auto byte:in.prevout.hash)base.push_back(std::to_integer<unsigned char>(byte));
++        U32(base,in.prevout.n);Bytes meta;
++        if(Carrier(out.scriptPubKey) && coins.AccessCoin(in.prevout).nHeight>=activation_height){
++            const auto& w=in.scriptWitness.stack;
++            if(w.size()!=(i==ri?3:2) || w[0].size()!=122 || w[1].size()!=64)return false;
++            meta=w[0];if(!Matches(meta,out))return false;
++            const XOnlyPubKey key{std::span<const unsigned char>{meta.data()+1,32}};
++            if(!key.VerifySchnorr(outer,w[1]))return false;
++        }else{
++            if(!P2TR(out.scriptPubKey) || !MoneyRange(out.nValue))return false;
++            const auto& w=in.scriptWitness.stack;
++            if(w.size()!=(i==ri?2:1) || w[0].size()!=64)return false;
++            meta.push_back(0);U64(meta,out.nValue);meta.insert(meta.end(),out.scriptPubKey.begin()+2,out.scriptPubKey.end());
++        }
++        prev.insert(prev.end(),meta.begin(),meta.end());
++    }
++    U32(base,outputs.size());
++    for(size_t i=0;i<outputs.size();++i){
++        if(!Matches(outputs[i],tx.vout[ro+i]))return false;
++        base.insert(base.end(),outputs[i].begin(),outputs[i].end());
++    }
++    U64(base,fee);U32(base,tx.nLockTime);
++    return cnu_verify_v0(payload.data(),payload.size(),base.data(),base.size(),prev.data(),prev.size(),height)==1;
++}
+diff --git a/src/cnu_reserve/reserve.h b/src/cnu_reserve/reserve.h
+new file mode 100644
+index 000000000..03b88f048
+--- /dev/null
++++ b/src/cnu_reserve/reserve.h
+@@ -0,0 +1,18 @@
++#pragma once
++#include <script/script.h>
++#include <algorithm>
++#include <limits>
++class CTransaction;
++class CCoinsViewCache;
++namespace cnu_reserve {
++inline bool IsCarrierScript(const CScript& s) { return s.size()==34 && s[0]==OP_16 && s[1]==32; }
++inline bool IsReserveScript(const CScript& s) { return s.size()==34 && s[0]==OP_15 && s[1]==32 && std::all_of(s.begin()+2,s.end(),[](auto b){return b==0x44;}); }
++void SetActivationHeight(int);
++int ActivationHeight();
++bool Active(int);
++constexpr unsigned MAX_TX_WORK=128, MAX_BLOCK_WORK=256;
++unsigned Work(const CTransaction&, const CCoinsViewCache&, int);
++bool Touches(const CTransaction&, const CCoinsViewCache&, int height=std::numeric_limits<int>::max());
++bool Check(const CTransaction&, const CCoinsViewCache&, int, long long);
++bool Coinbase(const CTransaction&, int);
++}
+diff --git a/src/consensus/tx_verify.cpp b/src/consensus/tx_verify.cpp
+index e580a9d29..b4c1d7c9f 100644
+--- a/src/consensus/tx_verify.cpp
++++ b/src/consensus/tx_verify.cpp
+@@ -3,6 +3,7 @@
+ // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+ 
+ #include <consensus/tx_verify.h>
++#include <cnu_reserve/reserve.h>
+ 
+ #include <chain.h>
+ #include <coins.h>
+@@ -215,6 +216,8 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, TxValidationState& state,
+         return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-fee-outofrange");
+     }
+ 
++    if (!cnu_reserve::Check(tx, inputs, nSpendHeight, txfee_aux))
++        return state.Invalid(tx.HasWitness() ? TxValidationResult::TX_WITNESS_MUTATED : TxValidationResult::TX_WITNESS_STRIPPED, "bad-cnu-reserve");
+     txfee = txfee_aux;
+     return true;
+ }
+diff --git a/src/init.cpp b/src/init.cpp
+index 3632a210a..4c7105b1c 100644
+--- a/src/init.cpp
++++ b/src/init.cpp
+@@ -6,6 +6,7 @@
+ #include <bitcoin-build-config.h> // IWYU pragma: keep
+ 
+ #include <init.h>
++#include <cnu_reserve/reserve.h>
+ 
+ #include <addrdb.h>
+ #include <addrman.h>
+@@ -517,6 +518,7 @@ void SetupServerArgs(ArgsManager& argsman, bool can_listen_ipc)
+                              "(default: %u)",
+                              kernel::DEFAULT_XOR_BLOCKSDIR),
+                    ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
++    argsman.AddArg("-cnuactivationheight=<n>", "Regtest-only CNU activation height (default 0; do not change for an existing datadir)", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
+     argsman.AddArg("-fastprune", "Use smaller block files and lower minimum prune height for testing purposes", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
+ #if HAVE_SYSTEM
+     argsman.AddArg("-blocknotify=<cmd>", "Execute command when the best block changes (%s in cmd is replaced by block hash). Not run for blocks connected during initial block download or reindexing.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+@@ -1182,7 +1184,12 @@ bool AppInitParameterInteraction(const ArgsManager& args)
+         }
+     }
+ 
++    const auto cnu_height = args.GetIntArg("-cnuactivationheight", 0);
++    if (cnu_height < 0 || cnu_height > 2147483646) return InitError(Untranslated("Invalid CNU activation height"));
++    cnu_reserve::SetActivationHeight(static_cast<int>(cnu_height));
+     // Prevent setting deployment parameters on mainnet.
++    if (chainparams.GetChainType() != ChainType::REGTEST)
++        return InitError(_("CNU reserve research binary is restricted to regtest."));
+     if (chainparams.GetChainType() == ChainType::MAIN) {
+         if (args.IsArgSet("-testactivationheight")) {
+             return InitError(_("The -testactivationheight option may not be used on mainnet."));
+diff --git a/src/node/miner.cpp b/src/node/miner.cpp
+index b4dbdd0ee..82361123b 100644
+--- a/src/node/miner.cpp
++++ b/src/node/miner.cpp
+@@ -4,6 +4,7 @@
+ // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+ 
+ #include <node/miner.h>
++#include <cnu_reserve/reserve.h>
+ 
+ #include <chain.h>
+ #include <chainparams.h>
+@@ -116,6 +117,7 @@ void BlockAssembler::resetBlock()
+ {
+     // Reserve space for fixed-size block header, txs count, and coinbase tx.
+     nBlockWeight = *Assert(m_options.block_reserved_weight);
++    cnu_block_work = 0;
+     nBlockSigOpsCost = m_options.coinbase_output_max_additional_sigops;
+ 
+     // These counters do not include coinbase tx
+@@ -260,7 +262,12 @@ bool BlockAssembler::TestChunkBlockLimits(int64_t chunk_weight, int64_t chunk_si
+ // - transaction finality (locktime)
+ bool BlockAssembler::TestChunkTransactions(const std::vector<CTxMemPoolEntryRef>& txs) const
+ {
++    CCoinsViewMemPool mempool_view{&m_chainstate.CoinsTip(), *Assert(m_mempool)};
++    const CCoinsViewCache view{&mempool_view};
++    unsigned work = cnu_block_work;
+     for (const auto tx : txs) {
++        work += cnu_reserve::Work(tx.get().GetTx(), view, nHeight);
++        if (work > cnu_reserve::MAX_BLOCK_WORK) return false;
+         if (!IsFinalTx(tx.get().GetTx(), nHeight, m_lock_time_cutoff)) {
+             return false;
+         }
+@@ -273,6 +280,9 @@ void BlockAssembler::AddToBlock(const CTxMemPoolEntry& entry)
+     pblocktemplate->block.vtx.emplace_back(entry.GetSharedTx());
+     pblocktemplate->vTxFees.push_back(entry.GetFee());
+     pblocktemplate->vTxSigOpsCost.push_back(entry.GetSigOpCost());
++    CCoinsViewMemPool mempool_view{&m_chainstate.CoinsTip(), *Assert(m_mempool)};
++    const CCoinsViewCache view{&mempool_view};
++    cnu_block_work += cnu_reserve::Work(entry.GetTx(), view, nHeight);
+     nBlockWeight += entry.GetTxWeight();
+     ++nBlockTx;
+     nBlockSigOpsCost += entry.GetSigOpCost();
+diff --git a/src/node/miner.h b/src/node/miner.h
+index d8cd2ff25..3b331be91 100644
+--- a/src/node/miner.h
++++ b/src/node/miner.h
+@@ -55,6 +55,7 @@ private:
+ 
+     // Information on the current status of the block
+     uint64_t nBlockWeight;
++    unsigned cnu_block_work{0};
+     uint64_t nBlockTx;
+     uint64_t nBlockSigOpsCost;
+     CAmount nFees;
+diff --git a/src/policy/policy.cpp b/src/policy/policy.cpp
+index 83ceb63cb..721321b9f 100644
+--- a/src/policy/policy.cpp
++++ b/src/policy/policy.cpp
+@@ -6,6 +6,7 @@
+ // NOTE: This file is intended to be customised by the end user, and includes only local node policy logic
+ 
+ #include <policy/policy.h>
++#include <cnu_reserve/reserve.h>
+ 
+ #include <coins.h>
+ #include <consensus/amount.h>
+@@ -65,6 +66,7 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
+ 
+ bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
+ {
++    if (cnu_reserve::IsCarrierScript(txout.scriptPubKey)) return false;
+     return (txout.nValue < GetDustThreshold(txout, dustRelayFeeIn));
+ }
+ 
+@@ -231,7 +233,9 @@ TxValidationState ValidateInputsStandardness(const CTransaction& tx, const CCoin
+         if (whichType == TxoutType::NONSTANDARD) {
+             state.Invalid(TxValidationResult::TX_INPUTS_NOT_STANDARD, "bad-txns-nonstandard-inputs", strprintf("input %u script unknown", i));
+             return state;
+-        } else if (whichType == TxoutType::WITNESS_UNKNOWN) {
++        } else if (whichType == TxoutType::WITNESS_UNKNOWN &&
++                   !cnu_reserve::IsCarrierScript(prev.scriptPubKey) &&
++                   !cnu_reserve::IsReserveScript(prev.scriptPubKey)) {
+             // WITNESS_UNKNOWN failures are typically also caught with a policy
+             // flag in the script interpreter, but it can be helpful to catch
+             // this type of NONSTANDARD transaction earlier in transaction
+@@ -325,8 +329,11 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
+             // Taproot spend (non-P2SH-wrapped, version 1, witness program size 32; see BIP 341)
+             std::span stack{tx.vin[i].scriptWitness.stack};
+             if (stack.size() >= 2 && !stack.back().empty() && stack.back()[0] == ANNEX_TAG) {
+-                // Annexes are nonstandard as long as no semantics are defined for them.
+-                return false;
++                const auto& annex = stack.back();
++                const std::array<unsigned char,5> magic{0x50,'C','N','U','2'};
++                if (!cnu_reserve::Touches(tx, mapInputs) || stack.size()!=2 || annex.size()<5 ||
++                    !std::equal(magic.begin(),magic.end(),annex.begin())) return false;
++                stack = stack.first(1); // The scoped envelope was checked in CheckTxInputs.
+             }
+             if (stack.size() >= 2) {
+                 // Script path spend (2 or more stack elements after removing optional annex)
+diff --git a/src/validation.cpp b/src/validation.cpp
+index c85a3af73..d6ed12440 100644
+--- a/src/validation.cpp
++++ b/src/validation.cpp
+@@ -6,6 +6,7 @@
+ #include <bitcoin-build-config.h> // IWYU pragma: keep
+ 
+ #include <validation.h>
++#include <cnu_reserve/reserve.h>
+ 
+ #include <arith_uint256.h>
+ #include <chain.h>
+@@ -886,6 +887,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
+     }
+ 
+     // The mempool holds txs for the next block, so pass height+1 to CheckTxInputs
++    if (!cnu_reserve::Active(m_active_chainstate.m_chain.Height() + 1) && cnu_reserve::Touches(tx, m_view))
++        return state.Invalid(TxValidationResult::TX_NOT_STANDARD, "cnu-inactive");
+     if (!Consensus::CheckTxInputs(tx, state, m_view, m_active_chainstate.m_chain.Height() + 1, ws.m_base_fees)) {
+         return false; // state filled in by CheckTxInputs
+     }
+@@ -1133,7 +1136,10 @@ bool MemPoolAccept::PolicyScriptChecks(Workspace& ws)
+     const CTransaction& tx = *ws.m_ptx;
+     TxValidationState& state = ws.m_state;
+ 
+-    constexpr script_verify_flags scriptVerifyFlags = STANDARD_SCRIPT_VERIFY_FLAGS;
++    script_verify_flags scriptVerifyFlags = STANDARD_SCRIPT_VERIFY_FLAGS;
++    // Scoped extension policy; CheckTxInputs already enforced every extension rule.
++    if (cnu_reserve::Touches(tx, m_view, m_active_chainstate.m_chain.Height() + 1))
++        scriptVerifyFlags &= ~SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM;
+ 
+     // Check input scripts and signatures.
+     // This is done last to help prevent CPU exhaustion denial-of-service attacks.
+@@ -2517,6 +2523,7 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state,
+     std::vector<int> prevheights;
+     CAmount nFees = 0;
+     int nInputs = 0;
++    unsigned int cnu_work = 0;
+     int64_t nSigOpsCost = 0;
+     blockundo.vtxundo.reserve(block.vtx.size() - 1);
+     for (unsigned int i = 0; i < block.vtx.size(); i++)
+@@ -2524,6 +2531,11 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state,
+         if (!state.IsValid()) break;
+         const CTransaction &tx = *(block.vtx[i]);
+ 
++        if (tx.IsCoinBase() && !cnu_reserve::Coinbase(tx, pindex->nHeight))
++            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cnu-bootstrap");
++        cnu_work += cnu_reserve::Work(tx, view, pindex->nHeight);
++        if (cnu_work > cnu_reserve::MAX_BLOCK_WORK)
++            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cnu-block-work");
+         nInputs += tx.vin.size();
+ 
+         if (!tx.IsCoinBase())
+@@ -2987,6 +2999,11 @@ bool Chainstate::DisconnectTip(BlockValidationState& state, DisconnectedBlockTra
+     }
+ 
+     m_chain.SetTip(*pindexDelete->pprev);
++    // Conservative research policy: discard cached mempool context at the boundary.
++    if (m_mempool && pindexDelete->nHeight + 1 == cnu_reserve::ActivationHeight()) {
++        LOCK(m_mempool->cs);
++        m_mempool->removeForReorg(m_chain, [](auto) { return true; });
++    }
+     m_chainman.UpdateIBDStatus();
+ 
+     UpdateTip(pindexDelete->pprev);
+@@ -3084,6 +3101,11 @@ bool Chainstate::ConnectTip(
+     }
+     // Update m_chain & related variables.
+     m_chain.SetTip(*pindexNew);
++    // Conservative research policy: discard cached mempool context at the boundary.
++    if (m_mempool && pindexNew->nHeight + 1 == cnu_reserve::ActivationHeight()) {
++        LOCK(m_mempool->cs);
++        m_mempool->removeForReorg(m_chain, [](auto) { return true; });
++    }
+     m_chainman.UpdateIBDStatus();
+     // Not fired while IBD is active. removeForBlock() above still runs.
+     if (m_mempool && m_chainman.m_options.signals && !m_chainman.IsInitialBlockDownload()) {

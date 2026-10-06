@@ -1,0 +1,253 @@
+{
+  "scope": "V2 stock consensus compatibility plus two upgraded experimental relay nodes",
+  "success": true,
+  "checks": [],
+  "transactions": [
+    {
+      "case": "load_deposit",
+      "txid": "90142fc2d37794369cfb30fe12e15c0155e594554c999cd74550685f93ce3302",
+      "reserve_inputs": 0,
+      "reserve_outputs": 1,
+      "bytes": 208283,
+      "vbytes": 52916
+    },
+    {
+      "case": "load_deposit",
+      "txid": "e94d7f73b213a2def82ecb5b2548de75058699cd4d4a8a5d7e5f7912fdaa0736",
+      "reserve_inputs": 0,
+      "reserve_outputs": 1,
+      "bytes": 208283,
+      "vbytes": 52916
+    },
+    {
+      "case": "load_deposit",
+      "txid": "57109d3bde1b958beebeac738ae1719d11574642df24d1e2862dd7f76b4b904b",
+      "reserve_inputs": 0,
+      "reserve_outputs": 1,
+      "bytes": 208283,
+      "vbytes": 52916
+    },
+    {
+      "case": "load_deposit",
+      "txid": "e22f668e2577a1ca8c833adaa340b54175c76a823b71b828f78fc78039fcbb00",
+      "reserve_inputs": 0,
+      "reserve_outputs": 1,
+      "bytes": 208283,
+      "vbytes": 52916
+    },
+    {
+      "case": "load_deposit",
+      "txid": "b7976d07df9054dc292917829ae61b102434a6f354fe18dc0b81585cb64ff494",
+      "reserve_inputs": 0,
+      "reserve_outputs": 1,
+      "bytes": 208283,
+      "vbytes": 52916
+    },
+    {
+      "case": "load_deposit",
+      "txid": "3312da8d0f68595ca85d8d982a69e1bba59472e23dfe156f9b40dd9eeee9aa7c",
+      "reserve_inputs": 0,
+      "reserve_outputs": 1,
+      "bytes": 208283,
+      "vbytes": 52916
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "91222e17d378a1a35f4a373331596bb93b8c3e11d9aaccc5b42f56d64c102b36",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "2223c23c267fe6ace79fef701e094bdc873cd8f038c612d2d49f0cf279449231",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "02ec5cb7551b81623f86feb6e84b5da9e0abb93a18bb8deee01b5316bd3689a2",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "21a93e63920ae6ef05455f869a484a00aaac47b14fd7d40115f6501c6650347c",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "1dae7132d15a57260ed36b819638e84655da52405589c993f2c0cebcb836f348",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "7b466a5b1a6766122796993124cd6d0c7bb717da48595bfa86816f1fe40cdf3f",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "a91bc8263e0aebc4a86aa5f6f8ccda8ac4a5bcbfd0b8c82c7c18c1097aadb486",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "c9b3809791e7fed9c19f30b22de273a0029f315088f860031d55dc4c625a2287",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "301bf8daf7a5a9dd400bb2590c2ff09df4da0014d90c65962c60b7f7f828e6ba",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "add9f40f4e3c8fa4f7362268091b36eead37048813414fa8e8eb97176b220b67",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "29aab8112eaeb75d5cb7fb1046940c9c7f7da6c91baaa9c74ae3df3f19bb0ee5",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    },
+    {
+      "case": "contended_withdrawal",
+      "txid": "dc11e9d44a85c4c6622a9f6d6b15a315d777e3adf348a3996fb6ab1c40a04c07",
+      "reserve_inputs": 1,
+      "reserve_outputs": 1,
+      "bytes": 9369,
+      "vbytes": 2508
+    }
+  ],
+  "run": "<local path omitted>",
+  "version": 2,
+  "binaries": {
+    "stock": "dca0ff83c06fb8dd0e0ebf7333d75cdb1836143e6647cf156afd220fdb1df9e8",
+    "upgraded": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e",
+    "peer": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e"
+  },
+  "near_full_cold_block": {
+    "weight": 3999009,
+    "confidential_outputs": 120,
+    "work_units": 250,
+    "rpc_ms": {
+      "stock": 67.21890000062558,
+      "upgraded": 1112.1515000004365,
+      "peer": 1088.2083999995302
+    }
+  },
+  "block_assembler_work_budget": {
+    "available": 6,
+    "selected": 5,
+    "maximum": 5
+  },
+  "over_budget_block_rejected": {
+    "units": 300,
+    "limit": 256,
+    "stock_valid": true
+  },
+  "exit_contention": {
+    "independent_claims": 12,
+    "initially_selected_same_backing": true,
+    "retry_counts": [
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "all_confirmed": true,
+    "fee_sats": [
+      1000,
+      1100,
+      1200,
+      1300,
+      1400,
+      1500,
+      1600,
+      1700,
+      1800,
+      1900,
+      2000,
+      2100
+    ],
+    "limitation": "One wallet controls different claims; a bounded chain of replacement backing, not multi-user fairness or starvation resistance."
+  },
+  "unique_invalid_p2p_burst": {
+    "count": 20,
+    "elapsed_ms": 1018.9784000003783,
+    "peer_responsive": true,
+    "accepted": 0
+  },
+  "sustained_unique_invalid_p2p": {
+    "seconds": 60.035241900000074,
+    "count": 679,
+    "accepted": 0,
+    "peer_responsive": true,
+    "limitation": "Single-peer source-limited generation with ping round trips; not a saturation or multi-peer DoS bound."
+  },
+  "unique_invalid_rpc": {
+    "count": 20,
+    "median_ms": 10.587050000140152,
+    "max_ms": 10.9480999999505,
+    "samples_ms": [
+      10.587300000224786,
+      10.692899999412475,
+      10.683699999390228,
+      10.46779999978753,
+      10.572600000159582,
+      10.495200000150362,
+      10.533399999985704,
+      10.792499999297434,
+      10.817600000336824,
+      10.9480999999505,
+      10.586800000055518,
+      10.585099999843806,
+      10.687299999517563,
+      10.556500000348024,
+      10.61900000058813,
+      10.724099999606551,
+      10.411500000373053,
+      10.54649999969115,
+      10.439499999847612,
+      10.849899999811896
+    ]
+  },
+  "limitations": "Single-machine bounded burst, not sustained saturation or a worst-case CPU guarantee; proof-unit constants are provisional."
+}

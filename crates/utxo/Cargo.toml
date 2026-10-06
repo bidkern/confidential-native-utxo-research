@@ -1,0 +1,10 @@
+[package]
+name = "utxo"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+keys.workspace = true
+confidential_tx.workspace = true
+

@@ -1,0 +1,13 @@
+[package]
+name = "keys"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+secp256k1-zkp.workspace = true
+sha2.workspace = true
+hkdf.workspace = true
+bitcoin.workspace = true
+k256.workspace = true
+

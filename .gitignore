@@ -1,0 +1,10 @@
+target/
+.tools/
+compatibility/bitcoin-core/
+compatibility/bin/
+compatibility/runs/
+**/__pycache__/
+*.log
+*.seed.json
+**/test-seeds.json
+compatibility/latest*.json

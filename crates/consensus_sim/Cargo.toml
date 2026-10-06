@@ -1,0 +1,30 @@
+[package]
+name = "consensus_sim"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+keys.workspace = true
+address.workspace = true
+commitments.workspace = true
+proofs.workspace = true
+confidential_tx.workspace = true
+receiver_scan.workspace = true
+utxo.workspace = true
+secp256k1-zkp.workspace = true
+rand.workspace = true
+rand_chacha.workspace = true
+hex.workspace = true
+
+[[test]]
+name = "protocol"
+path = "../../tests/protocol.rs"
+
+[[bin]]
+name = "benchmark"
+path = "src/bin/benchmark.rs"
+
+[[bin]]
+name = "vectors"
+path = "src/bin/vectors.rs"

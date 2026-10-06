@@ -1,0 +1,81 @@
+{
+  "verified_on": "2026-10-06",
+  "success": true,
+  "scope": "Fresh source directory, pinned upstream fetched, both executables rebuilt, all three harnesses passed on the same machine using existing compiler and dependency cache. Not outside review or cross-platform/bit-identical reproduction.",
+  "source_directory": "<local path omitted>",
+  "matching_source_files": {
+    "crates/utxo/src/lib.rs": "5751e6b0fa9601dfd46891904001b641eb78823b99f17c2420a1fccdb2fdea22",
+    "crates/receiver_scan/src/lib.rs": "ff9d1fe2c0ef6e48278e458bf66b5463cfcd05a728f89068cbe71f2ed4060330",
+    "crates/proofs/src/lib.rs": "79cc1dbc11e9418488276d12080e609d34914b542e1c66b479e8fbacb3607e11",
+    "crates/keys/src/lib.rs": "2a889a51bbcbf30375db485372aa1f8fb92f7ecb4ca89431a70fe381e35cc3e4",
+    "crates/core_bridge/src/lib.rs": "2729de433eecf8986fcfa8875b4eb1bf5cc693e481f86585f12843091e7bbb8c",
+    "crates/core_bridge/src/bin/wallet.rs": "fad39dabb442f936da2f9d5691e40f9c3ade7bfc0876658e5dbf4f4ad9f711a1",
+    "crates/consensus_sim/src/lib.rs": "2b99531ba3558e6f44f5b56d8aa1a1767ea36ff8fb78af47bdc2c59ad14b866d",
+    "crates/consensus_sim/src/bin/benchmark.rs": "fbf4278dffe7319d1cc66297043fd758d0f23430f24b41d86ae3afc2136b0374",
+    "crates/consensus_sim/src/bin/vectors.rs": "0cf75de650a04c701bdc3a1590b5fe9a72f1ff6c194963dfef03953010b9f8ac",
+    "crates/confidential_tx/src/lib.rs": "a6737ffb9bed588e00b851654d932de7455ef631b0a222474a88daa2728ded4f",
+    "crates/commitments/src/lib.rs": "c9a2bcb1d9f3b6e179c24482b18de6cf8745bb4668746497de6d386a986f3956",
+    "crates/address/src/lib.rs": "d23601161ef4f5c23c3b4c44d3acc704c95e393bc904197a830e6aafe49d7fd3",
+    "crates/address/Cargo.toml": "97912e3634f113f22529842816323c61acb8edaaaf0671e5c1bf04c79e1e4463",
+    "crates/commitments/Cargo.toml": "c4d2a53f414538eebdd4915508ef98078f0c9b1e67142fa6dcc3cce1e5c01918",
+    "crates/confidential_tx/Cargo.toml": "30ace8da83453abe8e8df15458127f8666d8b2658a43f1b0494b1bfd74470a76",
+    "crates/consensus_sim/Cargo.toml": "9be558943aa166705a1e0d66041ee058f3c283c5451919803d11548fd14a3f4e",
+    "crates/core_bridge/Cargo.toml": "021b0c4a5597df70670e0f6dbe44ecaa7516c4a3df786a50432cf221a63c2737",
+    "crates/keys/Cargo.toml": "c81f85d0112f52b7e107285b7bff14a32a87352a1393bfebba540e621aa4b94f",
+    "crates/proofs/Cargo.toml": "e4e917c5412234266ebac377de01f2b88ebf61d713ba168d7df60aad506856da",
+    "crates/receiver_scan/Cargo.toml": "113b4295ee2893d24c8b712e34df916ee2c269f8a94e05c51bf723864893c29b",
+    "crates/utxo/Cargo.toml": "d071e7b9fbfd208dae7179be5f7fccdabb9eccf3e4c6f98a352de32c467fef88",
+    "Cargo.toml": "0b6ff6c7e087a737bf27ed9e659f21356daba0bfb272e283c4b5a30f62e21478",
+    "Cargo.lock": "8e9a2fa417086bc42bf3e382bb2ca578cbb8626c373e5f288ab958268c7958ad",
+    "integration/lab.py": "29c6916c400bf41b1bdd5b4cb98dc1aaeb25ebe1645fd4dfbc1fe7ff05c20466",
+    "scripts/cargo.ps1": "aac0cf56a82d0db4f90275b0d323c8684766773ba13c2bc6ff0c23a2d2276783",
+    "compatibility/reserve.cpp": "84d45167c5acd13e19918560d941e75c8e1a48c51768e368dd370eff21c07ff8",
+    "compatibility/reserve.h": "d9631735ab8877d559b66ee6b6afd83496e77737c4b00ca72d5c84cc7abbcfcb",
+    "compatibility/patch_core.py": "254545764663ade38ab1cbfdb8a99b01da52bf20d29b147a69c8f4fafda5a695",
+    "compatibility/build.ps1": "e77c4bc6c6a9477829a534dddff6f0730cc9765b6800202a226a03b0ccc3f14e",
+    "compatibility/reproduce.ps1": "c67ee42bc00f807ef46d04d7f0341dd46cfe482e45906cf89577ebbf79b82301",
+    "compatibility/demo.py": "59ad8f7a61e3023ab195f4a1c4f0dd608e222e2f0e34a8c9548371e9361c69ff",
+    "compatibility/v2_demo.py": "eccde2cb2c2ceb36bb7758bfa48fcdcc10aec86b1563e9cb50ee6e23a0bea6c0",
+    "compatibility/activation_demo.py": "d8789eb83a29c9ac46533a377ef77001c4cfbd0853aa9372d1b38971d410085c",
+    "compatibility/hostile_demo.py": "d9dd98f8708f085f0ca0c1831d97eab3089cdd5ab6aca5dc7e3b5bb8a47492f9",
+    "compatibility/bitcoin-core/src/CMakeLists.txt": "12de8fcc08f9bf1ddad759d9b9b94b7d0d911a7606242a20313db173c914d31e",
+    "compatibility/bitcoin-core/src/consensus/tx_verify.cpp": "eab01176eff52ab70c909682a9069ec7408a265f2def7c1d55d00afedb7aff0e",
+    "compatibility/bitcoin-core/src/init.cpp": "9bc40fcf94d9925115df66b444bc90216e3b147f3e456b8a55153f6ddf54e7e8",
+    "compatibility/bitcoin-core/src/policy/policy.cpp": "d50202bd676f39b02fc45da7e0f1166e752e4c1d98dd73dc70121944460f3638",
+    "compatibility/bitcoin-core/src/validation.cpp": "454d8ea0b58ddeed918486b0e6ba2fd0ed975cfcae69beb86ebcb1ecc34822c3",
+    "compatibility/bitcoin-core/src/node/miner.cpp": "7cefd805526376c2ea91b950798bf1c59c26c66e390bd1fc4e690df3c5895bab",
+    "compatibility/bitcoin-core/src/node/miner.h": "e73c451d41ad5d5e37ea583b348765cbb69f72204ef71d56040acde971adf65a",
+    "compatibility/bitcoin-core/src/cnu_reserve/reserve.cpp": "84d45167c5acd13e19918560d941e75c8e1a48c51768e368dd370eff21c07ff8",
+    "compatibility/bitcoin-core/src/cnu_reserve/reserve.h": "d9631735ab8877d559b66ee6b6afd83496e77737c4b00ca72d5c84cc7abbcfcb"
+  },
+  "reports": {
+    "v2": {
+      "sha256": "f065589f6f0c5ad81592fb2b9568fef811754bf31857ac4088006fdf2156ef11",
+      "binaries": {
+        "stock": "dca0ff83c06fb8dd0e0ebf7333d75cdb1836143e6647cf156afd220fdb1df9e8",
+        "upgraded": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e",
+        "peer": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e"
+      },
+      "success": true
+    },
+    "activation": {
+      "sha256": "56cdd7aae7022eec334c1ddfb0a270863fce1d6430aeae8ae3ce400589acd155",
+      "binaries": {
+        "stock": "dca0ff83c06fb8dd0e0ebf7333d75cdb1836143e6647cf156afd220fdb1df9e8",
+        "upgraded": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e",
+        "peer": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e"
+      },
+      "success": true
+    },
+    "hostile": {
+      "sha256": "3902855ae1610a7fb56cc9ca1c9c1dbd56af752f8a4cc6695093b5130f8fbe63",
+      "binaries": {
+        "stock": "dca0ff83c06fb8dd0e0ebf7333d75cdb1836143e6647cf156afd220fdb1df9e8",
+        "upgraded": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e",
+        "peer": "c111bffbfd0f7f1de99adc78c3bbabe8fa59e6f80ec7226e83421eea29d84b2e"
+      },
+      "success": true
+    }
+  },
+  "public_copy_note": "Local paths omitted. Report SHA256 entries identify the original local reports before path redaction; use PUBLIC-SHA256.json to identify these public copies."
+}
