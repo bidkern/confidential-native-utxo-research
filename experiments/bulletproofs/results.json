@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "altered_commitment_rejected": true,
+      "corrupted_proof_rejected": true,
+      "outputs": 1,
+      "proof_bytes": 736,
+      "prove_ms": 14.477,
+      "values_with_padding": 2,
+      "verify_ms": [
+        1.4613,
+        1.441,
+        1.4439,
+        1.4585,
+        1.4324
+      ],
+      "wrong_domain_rejected": true
+    },
+    {
+      "altered_commitment_rejected": true,
+      "corrupted_proof_rejected": true,
+      "outputs": 2,
+      "proof_bytes": 800,
+      "prove_ms": 27.386400000000002,
+      "values_with_padding": 4,
+      "verify_ms": [
+        2.4053999999999998,
+        2.3853,
+        2.3823999999999996,
+        2.4027,
+        2.3995
+      ],
+      "wrong_domain_rejected": true
+    },
+    {
+      "altered_commitment_rejected": true,
+      "corrupted_proof_rejected": true,
+      "outputs": 8,
+      "proof_bytes": 928,
+      "prove_ms": 103.0262,
+      "values_with_padding": 16,
+      "verify_ms": [
+        7.3737,
+        7.437,
+        7.4599,
+        7.4203,
+        7.4204
+      ],
+      "wrong_domain_rejected": true
+    },
+    {
+      "altered_commitment_rejected": true,
+      "corrupted_proof_rejected": true,
+      "outputs": 24,
+      "proof_bytes": 1056,
+      "prove_ms": 393.4142,
+      "values_with_padding": 64,
+      "verify_ms": [
+        26.453500000000002,
+        26.6162,
+        26.3993,
+        26.446399999999997,
+        26.539199999999997
+      ],
+      "wrong_domain_rejected": true
+    }
+  ],
+  "generator_precomputation_excluded": true,
+  "oversized_value_requires_complement_check": true,
+  "samples_per_case": 5,
+  "scope": "Isolated Ristretto Bulletproofs 5.0 comparator; NOT secp256k1 or consensus integration",
+  "verification_result_cache": false
+}

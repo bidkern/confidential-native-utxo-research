@@ -17,3 +17,5 @@ jobs:
         run: cargo +1.98.1 clippy --locked --workspace --all-targets -- -D warnings
       - name: Economics scenarios
         run: python compatibility/economics.py
+      - name: Isolated Ristretto comparator (not consensus integration)
+        run: cargo +1.98.1 run --locked --release --manifest-path experiments/bulletproofs/Cargo.toml

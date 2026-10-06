@@ -1,4 +1,4 @@
-# Smaller-proof feasibility â€” October 6, 2026
+# Smaller-proof feasibility — October 6, 2026
 
 Decision: retain the measured consensus verifier; investigate aggregated Bulletproofs-family proofs in a separate experimental adapter. Do not raise the block work limit or substitute cryptography based on these estimates. No replacement has been benchmarked or integrated into consensus.
 
@@ -40,3 +40,19 @@ All other current overhead is retained in these scenarios. No CPU speedup is ass
 5. Obtain independent cryptographic composition review; only then propose versioned consensus integration and a recalibrated resource schedule.
 
 SNARK/STARK alternatives are deferred: they would require a separately reviewed statement and implementation with additional engineering/assumption choices. Their possible compactness does not justify importing an unrelated proof system into this prototype now.
+
+
+## Executed comparator (separate from consensus)
+
+An isolated Ristretto implementation is now under experiments/bulletproofs with pinned dependencies, source and results. It is not linked into the Bitcoin verifier. Generator precomputation is excluded and verification has no result cache. The 24-output case pads 48 actual values/complements to 64.
+
+| Outputs | Measured aggregate proof bytes | Median verification ms (5 samples) |
+|---|---:|---:|
+| 1 | 736 | 1.444 |
+| 2 | 800 | 2.400 |
+| 8 | 928 | 7.420 |
+| 24 | 1056 | 26.454 |
+
+These are proof-only Ristretto measurements, not the hypothetical secp256k1 encodings in the fee table and not directly comparable to native-node RPC timings. Altered commitments, a wrong transcript domain and corrupted proofs were rejected. A valid 64-bit proof for MAX_MONEY+1 and a wrapped complement was accepted by the generic range verifier but rejected by the complement tally. This demonstrates why exact-bound enforcement cannot be dropped.
+
+The next implementation gate is a separately reviewed secp256k1-compatible adapter with full transaction binding and independent vectors. No consensus proof-format change or work-budget increase is justified by this comparator alone.

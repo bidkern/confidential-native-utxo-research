@@ -29,3 +29,5 @@ We seek separate consensus and applied-cryptography proceed/revise/stop assessme
 Legacy direct-value research documents under docs describe an earlier hard-fork experiment; compatibility/SPEC.md defines the published compatibility prototype. They must not be confused with a production upgrade proposal.
 
 Third-party notices are in THIRD_PARTY.md. No new project-wide license grant is made by this publication; licensing of original contributions requires the owner's explicit choice.
+
+[Prioritized remaining work](NEXT-STEPS.md). An [isolated Ristretto comparator](experiments/bulletproofs/README.md) now supplies measured aggregated-proof examples; it is not a secp256k1 verifier replacement.
