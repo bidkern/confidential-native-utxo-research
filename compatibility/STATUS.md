@@ -1,4 +1,4 @@
-# Project status — verified October 6, 2026
+# Project status â€” verified October 6, 2026
 
 This is a real Bitcoin consensus-extension research implementation, not a deployable Bitcoin product. Modified nodes enforce additional rules; stock nodes accept the honest experimental blocks without enforcing confidential claims. All activity is isolated regtest.
 

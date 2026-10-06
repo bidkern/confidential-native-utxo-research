@@ -12,7 +12,7 @@ The findings below describe the initial standalone prototype. The subsequent Cor
 4. **Cipher nonce reuse across replacements:** selected AES-GCM-SIV before coding rather than deriving a repeated ChaCha20-Poly1305 nonce for changed plaintext.
 5. **Dependency overflow:** secp256k1-zkp 0.11.0's range wrapper computes `max_value+1`. A valid 64-bit proof can overflow that expression. Enforce the exact 52-bit header/length (or exact-zero form) before library verification; regression test uses a real generated 64-bit proof and expects rejection in both profiles. No dependency files were patched.
 6. **Point-encoding confusion:** Pedersen commitment bytes are not ordinary SEC1 keys. Use library tally and zero-value proof rather than changing a commitment prefix to obtain a signing key.
-7. **In-block undo:** naïvely restoring every spent input resurrects intermediate outputs. Undo records only spends present before the block, then removes all creations. A parent/child spend in one block is covered by tests.
+7. **In-block undo:** naÃ¯vely restoring every spent input resurrects intermediate outputs. Undo records only spends present before the block, then removes all creations. A parent/child spend in one block is covered by tests.
 8. **Atomicity:** transactions and blocks validate against a staged map. Invalid later transactions and overpaid coinbase must leave tip and coins untouched.
 
 ## Attack coverage and remaining risk
