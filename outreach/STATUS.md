@@ -6,7 +6,7 @@
 |---|---|---|
 | [Bitcoin Development](https://groups.google.com/g/bitcoindev/about) | Technical feasibility request | Sent, then rejected for posting access. Not awaiting moderation or publicly published. Resolve membership/posting permission before retrying. |
 | [Delving Bitcoin](https://delvingbitcoin.org/) | One focused Protocol Design topic | Not posted: signed out. Owner must log in or create and verify an account. |
-| [Blockstream general inquiries](https://blockstream.com/contact/) | CT/secp256k1 reviewer referral | Sent; awaiting reply. No reviewer acceptance or recipient-read confirmation. |
+| [Blockstream general inquiries](https://blockstream.com/contact/) | CT/secp256k1 reviewer referral | Automated receipt confirmed; awaiting a substantive reply. No reviewer acceptance. |
 | [Bitcoin Optech](https://bitcoinops.org/en/about/) | Reviewer or venue referral | Sent; awaiting reply. No reviewer acceptance or recipient-read confirmation. |
 
 The mailing-list About page permits members to post and holds posts for moderation. A delivery failure is distinct from moderation. No public discussion URL is available. After membership is established, check Sent, rejection records and the public archive before one retry. Do not resend the two referrals merely because replies are pending.
