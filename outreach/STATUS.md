@@ -1,18 +1,26 @@
 # Outreach status — 2026-10-07
 
-**External messages sent this round: none. Reviewer acceptances: none verified.** The brief and drafts are public preparation, not delivered outreach. GitHub publication succeeded on the retry; the review brief is live. Browser and native computer-use initialization both failed with `failed to write kernel assets: The system cannot find the path specified`. Gmail is confirmed installed and ENABLED, but this conversation exposes no Gmail read/draft/send tools. The user explicitly authorized the ModexGPT account and all four outreach routes. Browser and native tool startup were retried and still fail; the Gmail account identity has not been verified through a mailbox tool. User authorization to seek reviewers is present; account/channel access is still required.
+**Two referral emails sent; one mailing-list submission bounced; no forum post. Reviewer acceptances: none verified.** Sent mail was checked before sending, and each submission was verified afterward. Private IDs, sender metadata and message copies are retained in a local ledger outside this publication checkout.
 
-| Priority | Destination | Appropriate request | State |
-|---|---|---|---|
-| 1 | [Delving Bitcoin Protocol Design](https://delvingbitcoin.org/categories) | One focused technical topic using TECHNICAL-POST-DRAFT.txt | Draft; account/session access needed |
-| 2 | [Bitcoin Development mailing list](https://groups.google.com/g/bitcoindev/about) / bitcoindev@googlegroups.com | Technical feasibility request; link any existing Delving discussion | Draft; group membership and authenticated sending needed; posts are moderated |
-| 3 | [Blockstream general inquiries](https://blockstream.com/contact/) / inquiries@blockstream.com | Ask for referral to an appropriate CT/secp256k1 reviewer | Referral draft; no claim that this inbox offers review |
-| 4 | [Bitcoin Optech](https://bitcoinops.org/en/about/) / info@bitcoinops.org | Ask for an appropriate venue or reviewer referral | Referral draft; no claim that Optech supplies audits |
+| Destination | Request | Verified state |
+|---|---|---|
+| [Bitcoin Development](https://groups.google.com/g/bitcoindev/about) | Technical feasibility request | Sent, then rejected for posting access. Not awaiting moderation or publicly published. Resolve membership/posting permission before retrying. |
+| [Delving Bitcoin](https://delvingbitcoin.org/) | One focused Protocol Design topic | Not posted: signed out. Owner must log in or create and verify an account. |
+| [Blockstream general inquiries](https://blockstream.com/contact/) | CT/secp256k1 reviewer referral | Sent; awaiting reply. No reviewer acceptance or recipient-read confirmation. |
+| [Bitcoin Optech](https://bitcoinops.org/en/about/) | Reviewer or venue referral | Sent; awaiting reply. No reviewer acceptance or recipient-read confirmation. |
 
-Verified sources: [Delving welcome](https://delvingbitcoin.org/t/welcome-to-delving-bitcoin/7), [guidelines](https://delvingbitcoin.org/guidelines), mailing-list About page, Blockstream contact and [research focus](https://research.blockstream.com/), and Optech About page. These establish subject fit/contact routes, not reviewer availability. No personal email address was guessed, no unrelated GitHub issue was opened, and no security-reporting inbox was used for general recruitment.
+The mailing-list About page permits members to post and holds posts for moderation. A delivery failure is distinct from moderation. No public discussion URL is available. After membership is established, check Sent, rejection records and the public archive before one retry. Do not resend the two referrals merely because replies are pending.
 
-Send one technical topic first, record its actual URL and moderation state, then use that link in focused referrals. Do not treat a queued post as published or a delivered request as acceptance. Do not duplicate the topic across forum categories. Do not promise compensation without a separately agreed scope/budget. Original GitHub issues #1–#3 remain open as response channels.
+For Delving, read [the welcome](https://delvingbitcoin.org/t/welcome-to-delving-bitcoin/7) and [guidelines](https://delvingbitcoin.org/guidelines), check for a matching existing topic, and post once in the appropriate category. Link and acknowledge the mailing-list discussion if it becomes public; a bounced submission is not a published cross-post.
 
-## Prepared deliverables
+## Scope and evidence
 
-BITCOINDEV-EMAIL-DRAFT.eml, BLOCKSTREAM-EMAIL-DRAFT.eml and OPTECH-EMAIL-DRAFT.eml are individually addressed unsent email files. From is deliberately unset because the full authenticated sender address is not available to verify. DELVING-POST-DRAFT.md is the forum draft. No mailing-list membership, moderation acceptance or forum login is assumed. Do not send a duplicate if an actual Sent-mail check later finds an existing message.
+Messages use the existing drafts as their baseline, adding pinned implementation/specification/activation links and limitations. Implementation target remains 2feff014bcc072c2afa4372508089c0bd4b96b15. Publication HEAD before this status update was 6acfd6c57f996a3f67c2c1893d68ddcc1a4fb486. No implementation changes are made.
+
+The ask is a scoped critique, counterexample, prior-work reference, referral or proceed/revise/stop assessment. No paid work or endorsement is assumed. The prototype remains experimental, unaudited, regtest-only and substantially AI-assisted. Self-produced tests and hosted CI are not independent review. No proof integration or work-cap change is implied.
+
+Issues [#1](https://github.com/bidkern/confidential-native-utxo-research/issues/1), [#2](https://github.com/bidkern/confidential-native-utxo-research/issues/2) and [#3](https://github.com/bidkern/confidential-native-utxo-research/issues/3) were checked: no outside acceptance was present. Repository Discussions is disabled. No acceptance was found in the matching mailbox search.
+
+## Draft provenance
+
+The three .eml files and DELVING-POST-DRAFT.md remain preparation artifacts, not delivery receipts. Actual email variants added pinned links and limitations. The private ledger records actual message IDs and bounce evidence and must not be published.

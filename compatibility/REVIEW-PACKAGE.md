@@ -1,6 +1,6 @@
 # Independent review entry point
 
-Updated October 6, 2026. Prepared for review; no independent reviewer has signed off and no external messages have been sent.
+Technical review package updated October 6, 2026. No independent reviewer has signed off. For the October 7 referral sends, rejected mailing-list submission and pending forum access, see [outreach status](../outreach/STATUS.md).
 
 ## Scope and reproduction
 
