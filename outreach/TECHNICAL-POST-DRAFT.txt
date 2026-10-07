@@ -1,0 +1,21 @@
+Subject: Feasibility review request: confidential Bitcoin claims with native spentness and fragmented backing
+
+Hello,
+
+We are looking for a scoped feasibility critique of an MIT-licensed, regtest-only Bitcoin consensus-extension experiment. It was developed with substantial AI assistance and has not had independent architectural or cryptographic review.
+
+The design keeps the outpoint graph visible. Zero-valued native carrier UTXOs commit to confidential claims, with separate fungible public reserve UTXOs backing those claims. New validation enforces R=S, exact value bounds and authorization. Transfers with public fee inputs avoid reserve contention; withdrawals and confidential-balance fees consume backing fragments and can still compete. Deposits/withdrawals and backing values remain public. The receiving scheme is inspired by BIP352, not compatible with it, and carriers are experimental future witness programs rather than ordinary Taproot outputs.
+
+Our central question is whether the restriction to old-node-valid blocks and the backing invariant admit a credible upgrade, including historical-output, wrapped-witness, signature and reorg cases. Supply enforcement explicitly relies on commitment binding and proof soundness. There is no claim of preserving plaintext supply auditability or of Bitcoin deployment readiness.
+
+A separate secp256k1 aggregated-proof adapter matches baseline commitment bytes and retains MAX_MONEY complement checks. Two-output proof data measures 803 bytes versus 16,664 baseline bytes, but it is not integrated into consensus. The historical library needed two documented scratch cleanup insertions after malformed-proof crashes. That patch and the cryptographic composition need review. No node-throughput increase is claimed.
+
+Implementation target: 2feff014bcc072c2afa4372508089c0bd4b96b15
+Repository: https://github.com/bidkern/confidential-native-utxo-research
+Review brief: https://github.com/bidkern/confidential-native-utxo-research/blob/main/outreach/REVIEW-BRIEF.md
+
+We would value a proceed/revise/stop assessment of one specific component, counterexamples, relevant prior work, or a referral. An outside developer willing to reproduce the full Core demonstrations would also help. Local tests and hosted Rust CI are evidence, not independent approval. No review fee or paid engagement is assumed.
+
+Consensus scope: https://github.com/bidkern/confidential-native-utxo-research/issues/1
+Cryptographic scope: https://github.com/bidkern/confidential-native-utxo-research/issues/2
+Outside reproduction: https://github.com/bidkern/confidential-native-utxo-research/issues/3

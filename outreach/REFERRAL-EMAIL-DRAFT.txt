@@ -1,0 +1,9 @@
+Subject: Referral request for Bitcoin consensus / confidential-transaction review
+
+Hello,
+
+Could you suggest an appropriate reviewer or discussion venue for a regtest-only Bitcoin consensus-extension research prototype? We need independent feedback on native confidential claims backed by fragmented public reserves, the old-node compatibility argument, and a separate secp256k1 range-proof adapter. Original code is MIT licensed; development was substantially AI-assisted and there is no independent audit.
+
+Brief: https://github.com/bidkern/confidential-native-utxo-research/blob/main/outreach/REVIEW-BRIEF.md
+
+A scoped feasibility critique or referral would help; this is not a request for endorsement or an assumed paid engagement. If this is outside your remit, no response is necessary.

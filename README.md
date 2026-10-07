@@ -24,7 +24,7 @@ The local tests cover differential block validation, reorgs, recovery, activatio
 
 ## Reviewers and independent reproducers wanted
 
-We seek separate consensus and applied-cryptography proceed/revise/stop assessments and an outside clean-build report. See the repository issues and CONTRIBUTING.md. Opening requests does not mean reviewers have accepted them. The wallet pilot remains gated on review and qualification.
+We seek separate consensus and applied-cryptography proceed/revise/stop assessments and an outside clean-build report. The [short review brief](outreach/REVIEW-BRIEF.md) provides specific questions and a pinned implementation target. See the repository issues and CONTRIBUTING.md. Opening requests does not mean reviewers have accepted them. The wallet pilot remains gated on review and qualification.
 
 Legacy direct-value research documents under docs describe an earlier hard-fork experiment; compatibility/SPEC.md defines the published compatibility prototype. They must not be confused with a production upgrade proposal.
 
