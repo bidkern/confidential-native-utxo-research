@@ -1,0 +1,30 @@
+To: inquiries@blockstream.com
+Subject:
+ Referral request: confidential-transaction and secp256k1 feasibility review
+X-Unsent: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Hello Blockstream team,
+
+Could you route this to an appropriate research contact, or suggest an indepe=
+ndent reviewer familiar with confidential transactions and secp256k1 range pr=
+oofs?
+
+We have an MIT-licensed, regtest-only Bitcoin consensus-extension experiment =
+using native confidential claims and fragmented public BTC backing. We need a=
+ scoped critique of exact monetary bounds, commitment/transcript composition =
+and a separate aggregated-proof adapter. Its historical dependency required t=
+wo documented scratch cleanup insertions after malformed-proof crashes; no cl=
+aim is made that current Blockstream products share that issue.
+
+Review brief: https://github.com/bidkern/confidential-native-utxo-research/bl=
+ob/main/outreach/REVIEW-BRIEF.md
+Cryptography questions: https://github.com/bidkern/confidential-native-utxo-r=
+esearch/issues/2
+
+Development was substantially AI-assisted, and no independent review has been=
+ completed. We are asking for a referral or an initial proceed/revise/stop as=
+sessment, not endorsement. No paid engagement is assumed. If this is outside =
+your remit, no response is necessary.

@@ -1,0 +1,32 @@
+To: info@bitcoinops.org
+Subject:
+ Referral request: review venue for a Bitcoin consensus-extension experiment
+X-Unsent: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Hello Bitcoin Optech team,
+
+Could you suggest an appropriate discussion venue or independent reviewer for=
+ a Bitcoin consensus-extension research prototype? We are seeking a scoped fe=
+asibility critique and an outside full-node reproduction, not newsletter cove=
+rage or an endorsement.
+
+The MIT-licensed, regtest-only design uses native zero-valued confidential-cl=
+aim carriers backed by fragmented public reserve UTXOs. The outpoint graph re=
+mains visible. The key review questions concern old-node compatibility, the b=
+acking invariant, activation/history and signature coverage. A separate secp2=
+56k1 proof experiment is not integrated into consensus.
+
+Review brief: https://github.com/bidkern/confidential-native-utxo-research/bl=
+ob/main/outreach/REVIEW-BRIEF.md
+Consensus questions: https://github.com/bidkern/confidential-native-utxo-rese=
+arch/issues/1
+Reproduction request: https://github.com/bidkern/confidential-native-utxo-res=
+earch/issues/3
+
+Development was substantially AI-assisted; local tests and hosted CI are not =
+independent architectural approval. A referral or a scoped critique would hel=
+p, with no paid engagement assumed. If this is outside your remit, no respons=
+e is necessary.
